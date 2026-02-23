@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from litestar import Controller, get
 
-from .base import HealthResponse, Web3SignerHealthResponse
+from py3signer.storage import KeyStorage  # noqa: TC001
 
-if TYPE_CHECKING:
-    from py3signer.storage import KeyStorage
+from .base import HealthResponse, Web3SignerHealthResponse
 
 
 class HealthController(Controller):  # type: ignore[misc]

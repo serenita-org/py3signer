@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING
 
+import msgspec
 from litestar import Controller, Request, Response, get, post
 from litestar.exceptions import HTTPException, NotFoundException, ValidationException
 from litestar.status_codes import HTTP_200_OK, HTTP_500_INTERNAL_SERVER_ERROR
@@ -16,11 +16,9 @@ from py3signer.signing_types import (
     sign_request_decoder,
     validate_signing_root,
 )
+from py3signer.storage import KeyStorage  # noqa: TC001
 
 from .base import SignResponse, clean_pubkey_hex
-
-if TYPE_CHECKING:
-    from py3signer.storage import KeyStorage
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +47,12 @@ class SigningController(Controller):  # type: ignore[misc]
             raise ValidationException(detail="Missing identifier")
 
         # Parse request body
-        sign_request = sign_request_decoder.decode(await request.body())
+        try:
+            sign_request = sign_request_decoder.decode(await request.body())
+        except msgspec.ValidationError as e:
+            raise ValidationException(detail=f"Validation error: {e}") from e
+        except msgspec.DecodeError as e:
+            raise ValidationException(detail=f"JSON decode error: {e}") from e
 
         # Validate signing root
         try:
