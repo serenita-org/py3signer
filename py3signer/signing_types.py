@@ -370,7 +370,7 @@ class BlobSidecarSignRequest(
 
 
 # The union type for all sign requests
-SignRequest = (
+type SignRequest = (
     AggregationSlotSignRequest
     | AggregateAndProofSignRequest
     | AggregateAndProofV2SignRequest

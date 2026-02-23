@@ -12,7 +12,6 @@ from litestar.status_codes import HTTP_200_OK, HTTP_500_INTERNAL_SERVER_ERROR
 
 from py3signer.signer import Signer, SignerError
 from py3signer.signing_types import (
-    SignRequest,
     get_domain_for_request,
     sign_request_decoder,
     validate_signing_root,
@@ -24,28 +23,6 @@ if TYPE_CHECKING:
     from py3signer.storage import KeyStorage
 
 logger = logging.getLogger(__name__)
-
-
-async def parse_sign_request(request: Request) -> SignRequest:
-    """Parse and validate a sign request from the request body.
-
-    Args:
-        request: The HTTP request
-
-    Returns:
-        Parsed SignRequest
-
-    Raises:
-        ValidationException: If parsing fails
-
-    """
-    from typing import cast
-
-    try:
-        body_bytes = await request.body()
-        return cast("SignRequest", sign_request_decoder.decode(body_bytes))
-    except Exception as e:
-        raise ValidationException(detail=f"Validation error: {e}") from e
 
 
 class SigningController(Controller):  # type: ignore[misc]
@@ -72,7 +49,7 @@ class SigningController(Controller):  # type: ignore[misc]
             raise ValidationException(detail="Missing identifier")
 
         # Parse request body
-        sign_request = await parse_sign_request(request)
+        sign_request = sign_request_decoder.decode(await request.body())
 
         # Validate signing root
         try:
