@@ -391,49 +391,6 @@ type SignRequest = (
 sign_request_decoder = msgspec.json.Decoder(SignRequest)
 
 
-def get_domain_for_request(request: SignRequest) -> bytes:
-    """Get the domain bytes for a given signing request type.
-
-    This maps the signing type to its corresponding 4-byte domain.
-    Domain computation from fork_info is not yet implemented;
-    callers must provide signing_root for now.
-
-    Args:
-        request: The signing request
-
-    Returns:
-        The 4-byte domain for this signing type
-
-    """
-    match request:
-        case AggregationSlotSignRequest():
-            return DOMAIN_SELECTION_PROOF
-        case AggregateAndProofSignRequest() | AggregateAndProofV2SignRequest():
-            return DOMAIN_AGGREGATE_AND_PROOF
-        case AttestationSignRequest():
-            return DOMAIN_BEACON_ATTESTER
-        case BlockSignRequest() | BlockV2SignRequest():
-            return DOMAIN_BEACON_PROPOSER
-        case DepositSignRequest():
-            return DOMAIN_DEPOSIT
-        case RandaoRevealSignRequest():
-            return DOMAIN_RANDAO
-        case VoluntaryExitSignRequest():
-            return DOMAIN_VOLUNTARY_EXIT
-        case SyncCommitteeMessageSignRequest():
-            return DOMAIN_SYNC_COMMITTEE
-        case SyncCommitteeSelectionProofSignRequest():
-            return DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF
-        case SyncCommitteeContributionAndProofSignRequest():
-            return DOMAIN_CONTRIBUTION_AND_PROOF
-        case ValidatorRegistrationSignRequest():
-            return DOMAIN_APPLICATION_MASK
-        case BlobSidecarSignRequest():
-            return DOMAIN_BLOB_SIDECAR
-        case _:
-            raise ValueError(f"Unknown signing request type: {type(request)}")
-
-
 def validate_signing_root(signing_root: str | None) -> bytes | None:
     """Validate and convert signing root to bytes.
 

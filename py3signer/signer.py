@@ -32,14 +32,12 @@ class Signer:
         self,
         pubkey_hex: str,
         data: bytes,
-        domain: bytes,
     ) -> Signature:
         """Sign data with the specified key.
 
         Args:
             pubkey_hex: The public key hex identifier
             data: The data to sign
-            domain: The 4-byte domain
 
         Returns:
             The BLS signature
@@ -48,9 +46,6 @@ class Signer:
             SignerError: If key not found or signing fails
 
         """
-        if len(domain) != 4:
-            raise SignerError(f"Domain must be 4 bytes, got {len(domain)}")
-
         SIGNING_REQUESTS_TOTAL.inc()
         start_time = time.perf_counter()
 

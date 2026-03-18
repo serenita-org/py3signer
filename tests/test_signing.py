@@ -113,18 +113,8 @@ class TestSigner:
 
     def test_sign_data_key_not_found(self, storage: KeyStorage) -> None:
         """Test signing with non-existent key."""
-        signer = Signer(storage)
-        domain = bytes.fromhex("01000000")  # beacon_attester domain
-
         with pytest.raises(SignerError, match="Key not found: nonexistent"):
-            signer.sign_data("nonexistent", b"data", domain)
-
-    def test_sign_data_invalid_domain_length(self, storage: KeyStorage) -> None:
-        """Test signing with invalid domain length."""
-        signer = Signer(storage)
-
-        with pytest.raises(SignerError, match="Domain must be 4 bytes, got 2"):
-            signer.sign_data("any", b"data", b"\x00\x00")  # 2 bytes instead of 4
+            Signer(storage).sign_data("nonexistent", b"data")
 
     def test_sign_data_success(self, storage: KeyStorage) -> None:
         """Test successful signing."""
@@ -133,14 +123,10 @@ class TestSigner:
         pk = sk.public_key()
         storage.add_key(pk, sk, path="m/12381/3600/0/0/0")
 
-        signer = Signer(storage)
-
         message = b"\x00" * 32
-        domain = bytes.fromhex("01000000")  # beacon_attester
-        signature = signer.sign_data(
+        signature = Signer(storage).sign_data(
             pk.to_bytes().hex(),
             message,
-            domain,
         )
 
         assert signature is not None
@@ -154,13 +140,11 @@ class TestSigner:
 
         signer = Signer(storage)
 
-        custom_domain = b"\xab\xcd\xef\x01"
         message = b"\x00" * 32
 
         signature = signer.sign_data(
             pk.to_bytes().hex(),
             message,
-            custom_domain,
         )
 
         assert signature is not None

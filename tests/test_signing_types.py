@@ -6,70 +6,25 @@ import msgspec
 import pytest
 
 from py3signer.signing_types import (
-    DOMAIN_AGGREGATE_AND_PROOF,
-    DOMAIN_APPLICATION_MASK,
-    DOMAIN_BEACON_ATTESTER,
-    DOMAIN_BEACON_PROPOSER,
-    DOMAIN_BLOB_SIDECAR,
-    DOMAIN_CONTRIBUTION_AND_PROOF,
-    DOMAIN_DEPOSIT,
-    DOMAIN_RANDAO,
-    DOMAIN_SELECTION_PROOF,
-    DOMAIN_SYNC_COMMITTEE,
-    DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF,
-    DOMAIN_VOLUNTARY_EXIT,
     AggregateAndProofSignRequest,
     AggregateAndProofV2SignRequest,
-    AggregationSlot,
     AggregationSlotSignRequest,
-    AttestationData,
     AttestationSignRequest,
-    BlobSidecar,
     BlobSidecarSignRequest,
     BlockSignRequest,
     BlockV2SignRequest,
-    Checkpoint,
-    DepositData,
     DepositSignRequest,
     Fork,
     ForkInfo,
-    RandaoReveal,
     RandaoRevealSignRequest,
-    SyncAggregatorSelectionData,
     SyncCommitteeContributionAndProofSignRequest,
-    SyncCommitteeMessageData,
     SyncCommitteeMessageSignRequest,
     SyncCommitteeSelectionProofSignRequest,
     ValidatorRegistrationSignRequest,
-    VoluntaryExit,
     VoluntaryExitSignRequest,
-    get_domain_for_request,
     sign_request_decoder,
     validate_signing_root,
 )
-
-
-class TestDomainConstants:
-    """Tests for domain constants."""
-
-    def test_domain_lengths(self) -> None:
-        """All domains should be 4 bytes."""
-        domains = [
-            DOMAIN_BEACON_ATTESTER,
-            DOMAIN_BEACON_PROPOSER,
-            DOMAIN_RANDAO,
-            DOMAIN_DEPOSIT,
-            DOMAIN_VOLUNTARY_EXIT,
-            DOMAIN_AGGREGATE_AND_PROOF,
-            DOMAIN_SELECTION_PROOF,
-            DOMAIN_SYNC_COMMITTEE,
-            DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF,
-            DOMAIN_CONTRIBUTION_AND_PROOF,
-            DOMAIN_APPLICATION_MASK,
-            DOMAIN_BLOB_SIDECAR,
-        ]
-        for domain in domains:
-            assert len(domain) == 4
 
 
 class TestForkInfo:
@@ -261,158 +216,6 @@ class TestSignRequestParsing:
 
         with pytest.raises(msgspec.ValidationError):
             sign_request_decoder.decode(json_data)
-
-
-class TestGetDomainForRequest:
-    """Tests for get_domain_for_request function."""
-
-    def test_attestation_domain(self) -> None:
-        """ATTESTATION should return DOMAIN_BEACON_ATTESTER."""
-        request = AttestationSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            attestation=AttestationData(
-                slot="1",
-                index="0",
-                beacon_block_root="0x0",
-                source=Checkpoint(epoch="0", root="0x0"),
-                target=Checkpoint(epoch="0", root="0x0"),
-            ),
-        )
-        assert get_domain_for_request(request) == DOMAIN_BEACON_ATTESTER
-
-    def test_randao_domain(self) -> None:
-        """RANDAO_REVEAL should return DOMAIN_RANDAO."""
-        request = RandaoRevealSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            randao_reveal=RandaoReveal(epoch="100"),
-        )
-        assert get_domain_for_request(request) == DOMAIN_RANDAO
-
-    def test_voluntary_exit_domain(self) -> None:
-        """VOLUNTARY_EXIT should return DOMAIN_VOLUNTARY_EXIT."""
-        request = VoluntaryExitSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            voluntary_exit=VoluntaryExit(epoch="100", validator_index="5"),
-        )
-        assert get_domain_for_request(request) == DOMAIN_VOLUNTARY_EXIT
-
-    def test_block_v2_domain(self) -> None:
-        """BLOCK_V2 should return DOMAIN_BEACON_PROPOSER."""
-        request = BlockV2SignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            beacon_block={"version": "phase0", "block": {}},
-        )
-        assert get_domain_for_request(request) == DOMAIN_BEACON_PROPOSER
-
-    def test_deposit_domain(self) -> None:
-        """DEPOSIT should return DOMAIN_DEPOSIT."""
-        request = DepositSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            deposit=DepositData(
-                pubkey="0x0",
-                withdrawal_credentials="0x0",
-                amount="32000000000",
-                genesis_fork_version="0x00000000",
-            ),
-        )
-        assert get_domain_for_request(request) == DOMAIN_DEPOSIT
-
-    def test_aggregation_slot_domain(self) -> None:
-        """AGGREGATION_SLOT should return DOMAIN_SELECTION_PROOF."""
-        request = AggregationSlotSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            aggregation_slot=AggregationSlot(slot="100"),
-        )
-        assert get_domain_for_request(request) == DOMAIN_SELECTION_PROOF
-
-    def test_sync_committee_message_domain(self) -> None:
-        """SYNC_COMMITTEE_MESSAGE should return DOMAIN_SYNC_COMMITTEE."""
-        request = SyncCommitteeMessageSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            sync_committee_message=SyncCommitteeMessageData(
-                slot="100",
-                beacon_block_root="0x0",
-            ),
-        )
-        assert get_domain_for_request(request) == DOMAIN_SYNC_COMMITTEE
-
-    def test_sync_committee_selection_proof_domain(self) -> None:
-        """SYNC_COMMITTEE_SELECTION_PROOF should return DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF."""
-        request = SyncCommitteeSelectionProofSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            sync_aggregator_selection_data=SyncAggregatorSelectionData(
-                slot="100",
-                subcommittee_index="0",
-            ),
-        )
-        assert get_domain_for_request(request) == DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF
-
-    def test_validator_registration_domain(self) -> None:
-        """VALIDATOR_REGISTRATION should return DOMAIN_APPLICATION_MASK."""
-        from py3signer.signing_types import ValidatorRegistration
-
-        request = ValidatorRegistrationSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            validator_registration=ValidatorRegistration(
-                fee_recipient="0x0",
-                gas_limit="30000000",
-                timestamp="1234567890",
-                pubkey="0x0",
-            ),
-        )
-        assert get_domain_for_request(request) == DOMAIN_APPLICATION_MASK
-
-    def test_blob_sidecar_domain(self) -> None:
-        """BLOB_SIDECAR should return DOMAIN_BLOB_SIDECAR."""
-        request = BlobSidecarSignRequest(
-            fork_info=ForkInfo(
-                fork=Fork(previous_version="0x0", current_version="0x0", epoch="0"),
-                genesis_validators_root="0x0",
-            ),
-            signing_root="0x" + "00" * 32,
-            blob_sidecar=BlobSidecar(
-                slot="100",
-                block_root="0x0",
-                index="0",
-            ),
-        )
-        assert get_domain_for_request(request) == DOMAIN_BLOB_SIDECAR
 
 
 class TestValidateSigningRoot:

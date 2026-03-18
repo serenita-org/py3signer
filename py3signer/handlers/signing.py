@@ -12,7 +12,6 @@ from litestar.status_codes import HTTP_200_OK, HTTP_500_INTERNAL_SERVER_ERROR
 
 from py3signer.signer import Signer, SignerError
 from py3signer.signing_types import (
-    get_domain_for_request,
     sign_request_decoder,
     validate_signing_root,
 )
@@ -66,22 +65,12 @@ class SigningController(Controller):  # type: ignore[misc]
                 "is not yet implemented. Please provide signing_root in the request.",
             )
 
-        # Get domain for signing
-        try:
-            domain = get_domain_for_request(sign_request)
-        except ValueError as e:
-            raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=str(e),
-            ) from e
-
         # Perform signing
         try:
             signature = await asyncio.to_thread(
                 signer.sign_data,
                 pubkey_hex=pubkey_hex,
                 data=message,
-                domain=domain,
             )
         except SignerError as e:
             raise NotFoundException(detail=str(e)) from e
