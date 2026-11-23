@@ -13,6 +13,7 @@ dependencies = [
     "granian>=2.7.0",
     "msgspec>=0.20.0",
     "prometheus-client>=0.24.0",
+    "ssz-z-python @ git+https://github.com/eth2353/ssz-z-python.git@ffc6d14ddf524ab3c66391e7f9c836f0995a1f1a",
 ]
 
 [project.scripts]

@@ -21,8 +21,7 @@ DOMAIN_AGGREGATE_AND_PROOF = bytes.fromhex("06000000")
 DOMAIN_SYNC_COMMITTEE = bytes.fromhex("07000000")
 DOMAIN_SYNC_COMMITTEE_SELECTION_PROOF = bytes.fromhex("08000000")
 DOMAIN_CONTRIBUTION_AND_PROOF = bytes.fromhex("09000000")
-DOMAIN_APPLICATION_MASK = bytes.fromhex("0a000000")
-DOMAIN_BLOB_SIDECAR = bytes.fromhex("0b000000")
+DOMAIN_APPLICATION_BUILDER = bytes.fromhex("00000001")
 
 
 class Fork(msgspec.Struct, frozen=True):
@@ -98,7 +97,7 @@ class DepositData(msgspec.Struct, frozen=True):
     pubkey: str
     withdrawal_credentials: str = msgspec.field(name="withdrawal_credentials")
     amount: str
-    genesis_fork_version: str = msgspec.field(name="genesis_fork_version")
+    genesis_fork_version: str | None = None
 
 
 class SyncCommitteeMessageData(msgspec.Struct, frozen=True):
@@ -155,11 +154,7 @@ class ValidatorRegistration(msgspec.Struct, frozen=True):
 
 
 class BlobSidecar(msgspec.Struct, frozen=True):
-    """Blob sidecar data for BLOB_SIDECAR signing type.
-
-    Per Ethereum Remote Signing API spec v1.3.0, BlobSidecar
-    contains the data needed to sign a blob sidecar for Deneb+.
-    """
+    """Payload for the legacy BLOB_SIDECAR request."""
 
     slot: str
     block_root: str = msgspec.field(name="block_root")
@@ -170,203 +165,124 @@ class BlobSidecar(msgspec.Struct, frozen=True):
 # Each type has a discriminator 'type' field and the base fields
 
 
+class _SigningRequest(msgspec.Struct, kw_only=True, frozen=True, tag_field="type"):
+    signing_root: str | None = None
+    api_signing_root: str | None = msgspec.field(name="signingRoot", default=None)
+
+
+class _ForkSigningRequest(_SigningRequest, kw_only=True, frozen=True):
+    fork_info: ForkInfo
+
+
 class AggregationSlotSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="AGGREGATION_SLOT",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="AGGREGATION_SLOT"
 ):
     """Request to sign an aggregation slot."""
 
     aggregation_slot: AggregationSlot
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class AggregateAndProofSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="AGGREGATE_AND_PROOF",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="AGGREGATE_AND_PROOF"
 ):
     """Request to sign an aggregate and proof (deprecated)."""
 
     aggregate_and_proof: AggregateAndProof
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class AggregateAndProofV2SignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="AGGREGATE_AND_PROOF_V2",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="AGGREGATE_AND_PROOF_V2"
 ):
     """Request to sign a versioned aggregate and proof."""
 
     aggregate_and_proof: dict[str, Any]  # Versioned aggregate_and_proof
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class AttestationSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="ATTESTATION",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="ATTESTATION"
 ):
     """Request to sign an attestation."""
 
     attestation: AttestationData
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
-class BlockSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="BLOCK",
-):
+class BlockSignRequest(_ForkSigningRequest, kw_only=True, frozen=True, tag="BLOCK"):
     """Request to sign a beacon block (deprecated)."""
 
     block: dict[str, Any]  # BeaconBlock
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class BlockV2SignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="BLOCK_V2",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="BLOCK_V2"
 ):
     """Request to sign a versioned beacon block."""
 
     beacon_block: dict[str, Any] = msgspec.field(name="beacon_block")  # Versioned block
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
-class DepositSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="DEPOSIT",
-):
+class DepositSignRequest(_SigningRequest, kw_only=True, frozen=True, tag="DEPOSIT"):
     """Request to sign a deposit."""
 
     deposit: DepositData
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class RandaoRevealSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="RANDAO_REVEAL",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="RANDAO_REVEAL"
 ):
     """Request to sign a RANDAO reveal."""
 
     randao_reveal: RandaoReveal
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class VoluntaryExitSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="VOLUNTARY_EXIT",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="VOLUNTARY_EXIT"
 ):
     """Request to sign a voluntary exit."""
 
     voluntary_exit: VoluntaryExit
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class SyncCommitteeMessageSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="SYNC_COMMITTEE_MESSAGE",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="SYNC_COMMITTEE_MESSAGE"
 ):
     """Request to sign a sync committee message."""
 
     sync_committee_message: SyncCommitteeMessageData
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class SyncCommitteeSelectionProofSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="SYNC_COMMITTEE_SELECTION_PROOF",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="SYNC_COMMITTEE_SELECTION_PROOF"
 ):
     """Request to sign a sync committee selection proof."""
 
     sync_aggregator_selection_data: SyncAggregatorSelectionData
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class SyncCommitteeContributionAndProofSignRequest(
-    msgspec.Struct,
+    _ForkSigningRequest,
     kw_only=True,
     frozen=True,
-    tag_field="type",
     tag="SYNC_COMMITTEE_CONTRIBUTION_AND_PROOF",
 ):
     """Request to sign a sync committee contribution and proof."""
 
     contribution_and_proof: ContributionAndProof
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class ValidatorRegistrationSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="VALIDATOR_REGISTRATION",
+    _SigningRequest, kw_only=True, frozen=True, tag="VALIDATOR_REGISTRATION"
 ):
     """Request to sign a validator registration."""
 
     validator_registration: ValidatorRegistration
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 class BlobSidecarSignRequest(
-    msgspec.Struct,
-    kw_only=True,
-    frozen=True,
-    tag_field="type",
-    tag="BLOB_SIDECAR",
+    _ForkSigningRequest, kw_only=True, frozen=True, tag="BLOB_SIDECAR"
 ):
-    """Request to sign a blob sidecar.
-
-    Used for signing blob sidecars in Deneb and later forks.
-    """
+    """Recognize legacy blob sidecar requests and return a specific error."""
 
     blob_sidecar: BlobSidecar
-    fork_info: ForkInfo = msgspec.field(name="fork_info")
-    signing_root: str | None = msgspec.field(name="signing_root", default=None)
 
 
 # The union type for all sign requests
@@ -407,11 +323,13 @@ def validate_signing_root(signing_root: str | None) -> bytes | None:
     if signing_root is None:
         return None
 
-    # Use slicing instead of replace() - O(1) vs O(n)
     signing_root = signing_root.removeprefix("0x")
     if len(signing_root) != 64:
         raise ValueError("signing_root must be 32 bytes (64 hex characters)")
     try:
-        return bytes.fromhex(signing_root)
+        root = bytes.fromhex(signing_root)
     except ValueError as e:
         raise ValueError(f"signing_root must be valid hexadecimal: {e}") from e
+    if len(root) != 32:
+        raise ValueError("signing_root must be valid hexadecimal without whitespace")
+    return root

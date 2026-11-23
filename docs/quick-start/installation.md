@@ -11,6 +11,8 @@
 - Python 3.14+
 - Rust toolchain (for building the native extension)
 - [uv](https://github.com/astral-sh/uv){:target="_blank"} (recommended) or pip
+- Git and HTTPS access to fetch and build the pinned SSZ bindings. Linux AMD64
+  builds also require GNU binutils.
 
 ## Install Rust
 
@@ -75,6 +77,7 @@ usage: py3signer [-h] [--host HOST] [-p PORT] [--log-level {DEBUG,INFO,WARNING,E
                  [--metrics-port METRICS_PORT] [--metrics-host METRICS_HOST]
                  [--data-dir DATA_DIR] [--keystores-path KEYSTORES_PATH]
                  [--keystores-passwords-path KEYSTORES_PASSWORDS_PATH] [-w WORKERS]
+                 --network {mainnet,hoodi,gnosis,chiado}
 
 py3signer - A Remote BLS Signer for Ethereum
 
@@ -95,12 +98,8 @@ cd py3signer
 python3.14 -m venv .venv
 source .venv/bin/activate
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Build the Rust extension
-pip install maturin
-maturin develop
+# Build and install py3signer and its dependencies
+pip install .
 ```
 
 ## Development Dependencies
@@ -127,7 +126,7 @@ A Dockerfile is included for containerized deployments:
 docker build -t py3signer .
 
 # Run (example)
-docker run -p 8080:8080 py3signer
+docker run -p 8080:8080 py3signer --network hoodi
 ```
 
 See the [Dockerfile](https://github.com/serenita-org/py3signer/blob/main/Dockerfile){:target="_blank"} for details.

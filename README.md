@@ -35,26 +35,26 @@ uv sync
 uv run maturin develop
 
 # Start server
-uv run python -m py3signer
+uv run python -m py3signer --network hoodi
 
 # Or with keystores pre-loaded
-uv run python -m py3signer --data-dir ./keystores
+uv run python -m py3signer --network hoodi --data-dir ./keystores
 ```
 
 ## Usage
 
 ```bash
 # Basic usage
-uv run python -m py3signer
+uv run python -m py3signer --network hoodi
 
 # Custom host/port
-uv run python -m py3signer --host 0.0.0.0 --port 9000
+uv run python -m py3signer --network hoodi --host 0.0.0.0 --port 9000
 
 # Load keystores at startup
-uv run python -m py3signer --data-dir ./keystores
+uv run python -m py3signer --network hoodi --data-dir ./keystores
 
 # Input-only keystores (not persisted)
-uv run python -m py3signer \
+uv run python -m py3signer --network hoodi \
   --keystores-path ./keys \
   --keystores-passwords-path ./passwords
 ```

@@ -8,6 +8,15 @@ py3signer is configured via command-line arguments. There is no configuration fi
 
 ## CLI Reference
 
+### `--network`
+
+Required. Select the network to sign for. Supported values are `mainnet`,
+`hoodi`, `gnosis`, and `chiado`.
+
+Validator registrations and deposits without an explicit genesis fork version
+use the network's genesis fork version. Voluntary exits use the network's
+Capella fork version under EIP-7044.
+
 ### `--host`
 
 The HTTP server listen address.
@@ -117,7 +126,7 @@ Alternatively, set via environment variable:
 
 ```bash
 export PY3SIGNER_WORKERS=8
-uv run python -m py3signer
+uv run python -m py3signer --network hoodi
 ```
 
 ---
@@ -134,7 +143,7 @@ Sets the number of worker processes. Overrides the `--workers` flag if both are 
 
 ```bash
 export PY3SIGNER_WORKERS=4
-uv run python -m py3signer
+uv run python -m py3signer --network hoodi
 ```
 
 ### `PROMETHEUS_MULTIPROC_DIR`
@@ -149,7 +158,7 @@ Directory for Prometheus multi-process metrics. Automatically set when using mul
 
 ```bash
 # Local development with debug logging
-uv run python -m py3signer \
+uv run python -m py3signer --network hoodi \
   --log-level DEBUG \
   --port 8080
 ```
@@ -158,7 +167,7 @@ uv run python -m py3signer \
 
 ```bash
 # Load keystores at startup
-uv run python -m py3signer \
+uv run python -m py3signer --network hoodi \
   --data-dir /var/lib/py3signer/keystores \
   --host 0.0.0.0 \
   --port 8080 \
@@ -169,7 +178,7 @@ uv run python -m py3signer \
 
 ```bash
 # Load keystores from external location (not persisted)
-uv run python -m py3signer \
+uv run python -m py3signer --network hoodi \
   --keystores-path /mnt/external/keys \
   --keystores-passwords-path /mnt/external/passwords \
   --host 127.0.0.1 \
@@ -180,7 +189,7 @@ uv run python -m py3signer \
 
 ```bash
 # Both managed and external keystores
-uv run python -m py3signer \
+uv run python -m py3signer --network hoodi \
   --data-dir /var/lib/py3signer \
   --keystores-path /mnt/external/keys \
   --keystores-passwords-path /mnt/external/passwords \
@@ -197,15 +206,15 @@ py3signer validates configuration at startup and exits with an error if any sett
 
 ```bash
 # Invalid port
-$ uv run python -m py3signer --port 99999
+$ uv run python -m py3signer --network hoodi --port 99999
 Error: port must be between 1 and 65535, got 99999
 
 # Missing password path
-$ uv run python -m py3signer --keystores-path ./keys
+$ uv run python -m py3signer --network hoodi --keystores-path ./keys
 Error: --keystores-passwords-path must be provided when --keystores-path is set
 
 # Non-existent directory
-$ uv run python -m py3signer --data-dir /nonexistent
+$ uv run python -m py3signer --network hoodi --data-dir /nonexistent
 Error: data_dir does not exist: /nonexistent
 ```
 

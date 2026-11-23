@@ -1,10 +1,52 @@
 """Tests for configuration management."""
 
+import sys
 from pathlib import Path
 
 import pytest
 
-from py3signer.config import Config
+from py3signer.asgi import load_config_from_env, store_config_in_env
+from py3signer.config import Config, get_config
+
+
+@pytest.mark.parametrize(
+    ("network", "preset", "genesis_version", "capella_version"),
+    [
+        ("mainnet", "mainnet", "0x00000000", "0x03000000"),
+        ("hoodi", "mainnet", "0x10000910", "0x40000910"),
+        ("gnosis", "gnosis", "0x00000064", "0x03000064"),
+        ("chiado", "gnosis", "0x0000006f", "0x0300006f"),
+    ],
+)
+def test_network_selection_reaches_worker(
+    monkeypatch: pytest.MonkeyPatch,
+    network: str,
+    preset: str,
+    genesis_version: str,
+    capella_version: str,
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["py3signer", "--network", network])
+    monkeypatch.setenv("PY3SIGNER_CONFIG", "")
+
+    store_config_in_env(get_config())
+    config = load_config_from_env()
+
+    assert config is not None
+    assert config.network == network
+    assert config.network_config.preset == preset
+    assert config.network_config.genesis_fork_version == genesis_version
+    assert config.network_config.capella_fork_version == capella_version
+
+
+@pytest.mark.parametrize("arguments", [[], ["--network", "minimal"]])
+def test_cli_requires_supported_network(
+    monkeypatch: pytest.MonkeyPatch,
+    arguments: list[str],
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["py3signer", *arguments])
+    with pytest.raises(SystemExit) as error:
+        get_config()
+    assert error.value.code == 2
 
 
 class TestKeystoresPathConfig:

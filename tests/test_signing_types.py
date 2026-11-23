@@ -1,10 +1,13 @@
 """Tests for signing_types module."""
 
+from hashlib import sha256
 from typing import Any
 
 import msgspec
 import pytest
 
+from py3signer.config import Config
+from py3signer.signing_roots import compute_signing_root
 from py3signer.signing_types import (
     AggregateAndProofSignRequest,
     AggregateAndProofV2SignRequest,
@@ -25,6 +28,93 @@ from py3signer.signing_types import (
     sign_request_decoder,
     validate_signing_root,
 )
+
+
+@pytest.mark.parametrize(
+    ("network", "genesis_version", "capella_version"),
+    [("hoodi", "10000910", "40000910"), ("chiado", "0000006f", "0300006f")],
+)
+def test_network_signing_domains(
+    network: str, genesis_version: str, capella_version: str
+) -> None:
+    config = Config(network=network)
+    zero = bytes(32)
+    pubkey_root = sha256(bytes(64)).digest()
+    empty_pair_root = sha256(zero + zero).digest()
+    deposit_root = sha256(
+        sha256(pubkey_root + zero).digest() + empty_pair_root
+    ).digest()
+    registration_root = sha256(
+        empty_pair_root + sha256(zero + pubkey_root).digest()
+    ).digest()
+    exit_root = sha256((1).to_bytes(32, "little") + (2).to_bytes(32, "little")).digest()
+    exit_genesis_root = bytes.fromhex("12" * 32)
+    deposit = {
+        "pubkey": "0x" + "00" * 48,
+        "withdrawal_credentials": "0x" + "00" * 32,
+        "amount": "0",
+    }
+    requests = [
+        (
+            {"type": "DEPOSIT", "deposit": deposit},
+            "03000000",
+            genesis_version,
+            zero,
+            deposit_root,
+        ),
+        (
+            {
+                "type": "DEPOSIT",
+                "deposit": {**deposit, "genesis_fork_version": "0x01020304"},
+            },
+            "03000000",
+            "01020304",
+            zero,
+            deposit_root,
+        ),
+        (
+            {
+                "type": "VALIDATOR_REGISTRATION",
+                "validator_registration": {
+                    "fee_recipient": "0x" + "00" * 20,
+                    "gas_limit": "0",
+                    "timestamp": "0",
+                    "pubkey": deposit["pubkey"],
+                },
+            },
+            "00000001",
+            genesis_version,
+            zero,
+            registration_root,
+        ),
+        (
+            {
+                "type": "VOLUNTARY_EXIT",
+                "fork_info": {
+                    "fork": {
+                        "previous_version": "0x01020304",
+                        "current_version": "0x05060708",
+                        "epoch": "0",
+                    },
+                    "genesis_validators_root": "0x" + exit_genesis_root.hex(),
+                },
+                "voluntary_exit": {"epoch": "1", "validator_index": "2"},
+            },
+            "04000000",
+            capella_version,
+            exit_genesis_root,
+            exit_root,
+        ),
+    ]
+    for payload, domain_type, version, genesis_root, object_root in requests:
+        fork_root = sha256(
+            bytes.fromhex(version).ljust(32, b"\0") + genesis_root
+        ).digest()
+        expected = sha256(
+            object_root + bytes.fromhex(domain_type) + fork_root[:28]
+        ).digest()
+        request = sign_request_decoder.decode(msgspec.json.encode(payload))
+        assert compute_signing_root(request, config) == expected, payload["type"]
 
 
 class TestForkInfo:

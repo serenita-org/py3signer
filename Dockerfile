@@ -17,6 +17,8 @@ WORKDIR /py3signer
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    ca-certificates \
+    git \
     libssl-dev \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
@@ -50,12 +52,11 @@ RUN groupadd -g 1000 py3signer && \
 COPY --from=build --chown=py3signer:py3signer /py3signer/.venv /py3signer/.venv
 COPY --chown=py3signer:py3signer py3signer/ py3signer/
 
-USER py3signer
+USER 1000:1000
 
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')" || exit 1
+    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
 
-ENTRYPOINT ["python", "-m", "py3signer"]
-CMD ["--host", "0.0.0.0", "--port", "8080"]
+ENTRYPOINT ["python", "-m", "py3signer", "--host", "0.0.0.0"]

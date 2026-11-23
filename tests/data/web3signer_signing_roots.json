@@ -1,0 +1,1286 @@
+{
+  "source": {
+    "image": "consensys/web3signer:26.10.2",
+    "digest": "consensys/web3signer@sha256:b905b14cc5b0ae4f82cce08a811e88abcd282a8e84833aaaa35bf2f1851a3bcc",
+    "method": "Captured the computed root from Web3Signer's debug log after submitting a zero signingRoot. Resubmitted without signingRoot and verified the returned BLS signature against the captured root."
+  },
+  "vectors": [
+    {
+      "name": "mainnet-attestation-before-fulu",
+      "network": "mainnet",
+      "request": {
+        "type": "ATTESTATION",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "attestation": {
+          "slot": "13164543",
+          "index": "0",
+          "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+          "source": {
+            "epoch": "411390",
+            "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+          },
+          "target": {
+            "epoch": "411391",
+            "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+          }
+        }
+      },
+      "expected_signing_root": "0x0daffc212773c1be4300ec21b5699df46ce0d4b5b2c33223a849bda3a166a2a7"
+    },
+    {
+      "name": "mainnet-aggregation-slot-before-fulu",
+      "network": "mainnet",
+      "request": {
+        "type": "AGGREGATION_SLOT",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "aggregation_slot": {
+          "slot": "13164543"
+        }
+      },
+      "expected_signing_root": "0x9dc03dc57ed551326650e9134a2c6ba266d18178a369c0e74a48fca31da111b3"
+    },
+    {
+      "name": "mainnet-randao-before-fulu",
+      "network": "mainnet",
+      "request": {
+        "type": "RANDAO_REVEAL",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "randao_reveal": {
+          "epoch": "411391"
+        }
+      },
+      "expected_signing_root": "0x6a5cf440b37fff55f4f0c0b37d98488272eed675921a73daeb26fa9c5009aff1"
+    },
+    {
+      "name": "mainnet-attestation-at-fulu",
+      "network": "mainnet",
+      "request": {
+        "type": "ATTESTATION",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "attestation": {
+          "slot": "13164544",
+          "index": "0",
+          "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+          "source": {
+            "epoch": "411391",
+            "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+          },
+          "target": {
+            "epoch": "411392",
+            "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+          }
+        }
+      },
+      "expected_signing_root": "0x371cece865941c51ef0c0f2060c8373964771e83b67c1b3d7f2c8b98fae95e11"
+    },
+    {
+      "name": "mainnet-aggregation-slot-at-fulu",
+      "network": "mainnet",
+      "request": {
+        "type": "AGGREGATION_SLOT",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "aggregation_slot": {
+          "slot": "13164544"
+        }
+      },
+      "expected_signing_root": "0x6e15cc0163f554b4ac468140edb496938c9f29bebbf5352bd9da12dd75acbbf7"
+    },
+    {
+      "name": "mainnet-randao-at-fulu",
+      "network": "mainnet",
+      "request": {
+        "type": "RANDAO_REVEAL",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "randao_reveal": {
+          "epoch": "411392"
+        }
+      },
+      "expected_signing_root": "0x176d16f691a45835e5ec78bb2a35a9c6159935f8c8c253c1cefdea58e4677115"
+    },
+    {
+      "name": "mainnet-fulu-block-header",
+      "network": "mainnet",
+      "request": {
+        "type": "BLOCK_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "beacon_block": {
+          "version": "FULU",
+          "block_header": {
+            "slot": "13164551",
+            "proposer_index": "123456",
+            "parent_root": "0x0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c",
+            "state_root": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+            "body_root": "0x767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495"
+          }
+        }
+      },
+      "expected_signing_root": "0xf189410df9b21a8f27c591afaa960e8fd6f60a4889d62ee273a1d090e490260f"
+    },
+    {
+      "name": "mainnet-voluntary-exit-capella-domain",
+      "network": "mainnet",
+      "request": {
+        "type": "VOLUNTARY_EXIT",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "voluntary_exit": {
+          "epoch": "411404",
+          "validator_index": "480123"
+        }
+      },
+      "expected_signing_root": "0xa836dfc4d448a31df779b6ee41b5d47505e76ea45f3c6103024621edb7e0a40b"
+    },
+    {
+      "name": "mainnet-validator-registration",
+      "network": "mainnet",
+      "request": {
+        "type": "VALIDATOR_REGISTRATION",
+        "validator_registration": {
+          "fee_recipient": "0xb5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8",
+          "gas_limit": "60000000",
+          "timestamp": "1760000001",
+          "pubkey": "0x97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb"
+        }
+      },
+      "expected_signing_root": "0xc49d34d68b12135de9552bbbe8e857117fd50566b0ad0951324b506efe367b8a"
+    },
+    {
+      "name": "mainnet-deposit",
+      "network": "mainnet",
+      "request": {
+        "type": "DEPOSIT",
+        "deposit": {
+          "pubkey": "0x97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb",
+          "withdrawal_credentials": "0x010000000000000000000000606162636465666768696a6b6c6d6e6f70717273",
+          "amount": "32000000000",
+          "genesis_fork_version": "0x00000000"
+        }
+      },
+      "expected_signing_root": "0xd57d94c0dac88e46a02739be54f71959e402ffb65f859108758a39228fe820ae"
+    },
+    {
+      "name": "mainnet-sync-message-before-fulu",
+      "network": "mainnet",
+      "request": {
+        "type": "SYNC_COMMITTEE_MESSAGE",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "sync_committee_message": {
+          "slot": "13164543",
+          "beacon_block_root": "0x15161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f3031323334"
+        }
+      },
+      "expected_signing_root": "0x1b7b0a2032ccf7e0104505598ea831f27103e9cd6f57c7ffd02059e371cf7c2f"
+    },
+    {
+      "name": "mainnet-sync-message-at-fulu",
+      "network": "mainnet",
+      "request": {
+        "type": "SYNC_COMMITTEE_MESSAGE",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "sync_committee_message": {
+          "slot": "13164544",
+          "beacon_block_root": "0x15161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f3031323334"
+        }
+      },
+      "expected_signing_root": "0x993330dc2a2c6aa52db721dea3cfe1df86680a5fcf69fcbb633c91d6aa94af1b"
+    },
+    {
+      "name": "mainnet-sync-selection-proof",
+      "network": "mainnet",
+      "request": {
+        "type": "SYNC_COMMITTEE_SELECTION_PROOF",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "sync_aggregator_selection_data": {
+          "slot": "13164554",
+          "subcommittee_index": "2"
+        }
+      },
+      "expected_signing_root": "0xc37eb9236d56ff4567e2f783048c22034580b61c544c3b6b6776e15502f680ba"
+    },
+    {
+      "name": "mainnet-sync-contribution-and-proof",
+      "network": "mainnet",
+      "request": {
+        "type": "SYNC_COMMITTEE_CONTRIBUTION_AND_PROOF",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "contribution_and_proof": {
+          "aggregator_index": "769321",
+          "selection_proof": "0x95098efeaabd06b2814f10f8e00904798951476e5fb3e40723f503590fdcbc913592cf070a7b4146d9b7c4b337f94ef005784d3ceac97a976a8a75951c684dd0fc79960b95e72f3359f7f3bd7fc095cc32d868fd35eaf8555a139ade774eef00",
+          "contribution": {
+            "slot": "13164543",
+            "beacon_block_root": "0x434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162",
+            "subcommittee_index": "3",
+            "aggregation_bits": "0x808182838485868788898a8b8c8d8e8f",
+            "signature": "0x93df21d7d1320b60eeda8cf865c59a6d5e733a9cb1795d1d216908143f627d1e18345b482e66086da2424fd888673f6206d0cc099b4b9783286443795e84097b5748cce5886b62cc9875cb536424f4e4ea1f21bb54492af9b5f4eca11553b652"
+          }
+        }
+      },
+      "expected_signing_root": "0x0964e785ed3dacff0d0ffc954d200b8c5789503c78b5b56acbd2bb9a8eef763a"
+    },
+    {
+      "name": "mainnet-deneb-aggregate-and-proof",
+      "network": "mainnet",
+      "request": {
+        "type": "AGGREGATE_AND_PROOF_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x04000000",
+            "current_version": "0x05000000",
+            "epoch": "364032"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "aggregate_and_proof": {
+          "version": "DENEB",
+          "data": {
+            "aggregator_index": "98765",
+            "aggregate": {
+              "aggregation_bits": "0x017302",
+              "data": {
+                "slot": "11649023",
+                "index": "2",
+                "beacon_block_root": "0x1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+                "source": {
+                  "epoch": "364030",
+                  "root": "0x5a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70717273747576777879"
+                },
+                "target": {
+                  "epoch": "364031",
+                  "root": "0xa6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5"
+                }
+              },
+              "signature": "0x92cd3ecc7d2f9fe74963755a2404722b6d4d1465682d3dfd5618fb9c3da68979b50e4c0d2a4964f5b7dc8e768de91577168adec5b0a21e2d8563d876437e85aafa1279fae9d28fdce76eade8f0b41e08a05054257449fd7c0e7cf66ae9be47b6"
+            },
+            "selection_proof": "0xb42609673f05919b4a26ea5a97b8201415ff9df98e2aad10ca8649a226fe208e7db45dffcf5d8a94e4fdfceaf43b17d10a6c2d66fdd98812fd4aca583d3202ae1a09fe0f588a4c7bda83ff4ee03fe4835fdb3a6423188bab95b45c1729838069"
+          }
+        }
+      },
+      "expected_signing_root": "0xfe1b5ef59fa0d07f440e67ec680761e97ad86536f554772fa591b34bf41365f0"
+    },
+    {
+      "name": "mainnet-electra-aggregate-and-proof",
+      "network": "mainnet",
+      "request": {
+        "type": "AGGREGATE_AND_PROOF_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "aggregate_and_proof": {
+          "version": "ELECTRA",
+          "data": {
+            "aggregator_index": "98765",
+            "aggregate": {
+              "aggregation_bits": "0x017302",
+              "data": {
+                "slot": "13164543",
+                "index": "0",
+                "beacon_block_root": "0x1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+                "source": {
+                  "epoch": "411390",
+                  "root": "0x5a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70717273747576777879"
+                },
+                "target": {
+                  "epoch": "411391",
+                  "root": "0xa6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5"
+                }
+              },
+              "signature": "0x92cd3ecc7d2f9fe74963755a2404722b6d4d1465682d3dfd5618fb9c3da68979b50e4c0d2a4964f5b7dc8e768de91577168adec5b0a21e2d8563d876437e85aafa1279fae9d28fdce76eade8f0b41e08a05054257449fd7c0e7cf66ae9be47b6",
+              "committee_bits": "0x0100010000000000"
+            },
+            "selection_proof": "0xb42609673f05919b4a26ea5a97b8201415ff9df98e2aad10ca8649a226fe208e7db45dffcf5d8a94e4fdfceaf43b17d10a6c2d66fdd98812fd4aca583d3202ae1a09fe0f588a4c7bda83ff4ee03fe4835fdb3a6423188bab95b45c1729838069"
+          }
+        }
+      },
+      "expected_signing_root": "0xc704164bab56374e86d26a1b6e95ad27f20770ff41cb7d0ce3e84a6ee0e8d69f"
+    },
+    {
+      "name": "mainnet-fulu-aggregate-and-proof",
+      "network": "mainnet",
+      "request": {
+        "type": "AGGREGATE_AND_PROOF_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000000",
+            "current_version": "0x06000000",
+            "epoch": "411392"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "aggregate_and_proof": {
+          "version": "FULU",
+          "data": {
+            "aggregator_index": "98765",
+            "aggregate": {
+              "aggregation_bits": "0x017302",
+              "data": {
+                "slot": "13164547",
+                "index": "0",
+                "beacon_block_root": "0x1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+                "source": {
+                  "epoch": "411391",
+                  "root": "0x5a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70717273747576777879"
+                },
+                "target": {
+                  "epoch": "411392",
+                  "root": "0xa6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5"
+                }
+              },
+              "signature": "0x92cd3ecc7d2f9fe74963755a2404722b6d4d1465682d3dfd5618fb9c3da68979b50e4c0d2a4964f5b7dc8e768de91577168adec5b0a21e2d8563d876437e85aafa1279fae9d28fdce76eade8f0b41e08a05054257449fd7c0e7cf66ae9be47b6",
+              "committee_bits": "0x0100010000000000"
+            },
+            "selection_proof": "0xb42609673f05919b4a26ea5a97b8201415ff9df98e2aad10ca8649a226fe208e7db45dffcf5d8a94e4fdfceaf43b17d10a6c2d66fdd98812fd4aca583d3202ae1a09fe0f588a4c7bda83ff4ee03fe4835fdb3a6423188bab95b45c1729838069"
+          }
+        }
+      },
+      "expected_signing_root": "0xe97acb83f23b1646af9e234ea0ad096821554b4f40a7b3cdf1a4c18b10693050"
+    },
+    {
+      "name": "mainnet-unversioned-deneb-aggregate",
+      "network": "mainnet",
+      "request": {
+        "type": "AGGREGATE_AND_PROOF",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x04000000",
+            "current_version": "0x05000000",
+            "epoch": "364032"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "aggregate_and_proof": {
+          "aggregator_index": "98765",
+          "aggregate": {
+            "aggregation_bits": "0x017302",
+            "data": {
+              "slot": "11649023",
+              "index": "2",
+              "beacon_block_root": "0x1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+              "source": {
+                "epoch": "364030",
+                "root": "0x5a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70717273747576777879"
+              },
+              "target": {
+                "epoch": "364031",
+                "root": "0xa6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5"
+              }
+            },
+            "signature": "0x92cd3ecc7d2f9fe74963755a2404722b6d4d1465682d3dfd5618fb9c3da68979b50e4c0d2a4964f5b7dc8e768de91577168adec5b0a21e2d8563d876437e85aafa1279fae9d28fdce76eade8f0b41e08a05054257449fd7c0e7cf66ae9be47b6"
+          },
+          "selection_proof": "0xb42609673f05919b4a26ea5a97b8201415ff9df98e2aad10ca8649a226fe208e7db45dffcf5d8a94e4fdfceaf43b17d10a6c2d66fdd98812fd4aca583d3202ae1a09fe0f588a4c7bda83ff4ee03fe4835fdb3a6423188bab95b45c1729838069"
+        }
+      },
+      "expected_signing_root": "0xfe1b5ef59fa0d07f440e67ec680761e97ad86536f554772fa591b34bf41365f0"
+    },
+    {
+      "name": "mainnet-unversioned-phase0-block",
+      "network": "mainnet",
+      "request": {
+        "type": "BLOCK",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x00000000",
+            "current_version": "0x00000000",
+            "epoch": "0"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "block": {
+          "slot": "139",
+          "proposer_index": "123456",
+          "parent_root": "0x0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c",
+          "state_root": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+          "body": {
+            "randao_reveal": "0x93f3ce8634bc005daea80975fbe64a9317d75b20326e6c8e0c9e4ba23180729d37ca199dd83ce47652d44e4d36622bcd0f961e70b4bc5448c7b65892b446c7dd59e39dc64291fc4598cd70859c80e2b07a9d3210afa63d78dbcedd2889d56d62",
+            "eth1_data": {
+              "deposit_root": "0x0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a",
+              "deposit_count": "1234567",
+              "block_hash": "0x2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f40"
+            },
+            "graffiti": "0x65666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f8081828384",
+            "proposer_slashings": [],
+            "attester_slashings": [
+              {
+                "attestation_1": {
+                  "attesting_indices": [
+                    "20",
+                    "39",
+                    "1045",
+                    "7030",
+                    "65537"
+                  ],
+                  "data": {
+                    "slot": "136",
+                    "index": "1",
+                    "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+                    "source": {
+                      "epoch": "3",
+                      "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+                    },
+                    "target": {
+                      "epoch": "4",
+                      "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+                    }
+                  },
+                  "signature": "0xa26045b55023bc5ea7d01c4fe437936fb8b316d23139f7c7c72bd01ed12b596d469bbd54e73da6494bbcebe8c14afc8217046ae5efa9444403447ec8a93ef9cd3fe3b9a1efba212d981fcb99041cf90186bff05a70b224e741290876708cd308"
+                },
+                "attestation_2": {
+                  "attesting_indices": [
+                    "39"
+                  ],
+                  "data": {
+                    "slot": "136",
+                    "index": "1",
+                    "beacon_block_root": "0x535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172",
+                    "source": {
+                      "epoch": "3",
+                      "root": "0x9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babb"
+                    },
+                    "target": {
+                      "epoch": "4",
+                      "root": "0xe8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001020304050607"
+                    }
+                  },
+                  "signature": "0x8384f09fe394142751cf4da2014a231384637ab30b5c179607a3a7c655d3048a8f4acd2b912ccc8c19bc99a7601847bc186af03476a8adb330c550f4a6f8cb3ebb22bbf3539f9e76ccc78ed7be7b8c47eaf825a7af0a53755e1e662715e5e69f"
+                }
+              }
+            ],
+            "attestations": [
+              {
+                "aggregation_bits": "0x0102",
+                "data": {
+                  "slot": "136",
+                  "index": "1",
+                  "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+                  "source": {
+                    "epoch": "3",
+                    "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+                  },
+                  "target": {
+                    "epoch": "4",
+                    "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+                  }
+                },
+                "signature": "0xa8acccd29faa3aba43cc2a1ee4bc9e337533886b39594c36ad246241eb0c14e8c65ca212a6ea38f939c27c51d51e72300d3daeccba5826c2b484ec49f5f3441876bbefe5c46422a2e9b9909058b68de3cdf43d9f5c56132d1caa21215e964982"
+              }
+            ],
+            "deposits": [],
+            "voluntary_exits": []
+          }
+        }
+      },
+      "expected_signing_root": "0x8d58f05a0860ed082fba21e55e1e58f8fe338348eac026768803c1031ef86f7b"
+    },
+    {
+      "name": "mainnet-altair-full-block",
+      "network": "mainnet",
+      "request": {
+        "type": "BLOCK_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x00000000",
+            "current_version": "0x01000000",
+            "epoch": "74240"
+          },
+          "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95"
+        },
+        "beacon_block": {
+          "version": "ALTAIR",
+          "block": {
+            "slot": "2375682",
+            "proposer_index": "123456",
+            "parent_root": "0x0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c",
+            "state_root": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+            "body": {
+              "randao_reveal": "0x93f3ce8634bc005daea80975fbe64a9317d75b20326e6c8e0c9e4ba23180729d37ca199dd83ce47652d44e4d36622bcd0f961e70b4bc5448c7b65892b446c7dd59e39dc64291fc4598cd70859c80e2b07a9d3210afa63d78dbcedd2889d56d62",
+              "eth1_data": {
+                "deposit_root": "0x0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a",
+                "deposit_count": "1234567",
+                "block_hash": "0x2122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f40"
+              },
+              "graffiti": "0x65666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f8081828384",
+              "proposer_slashings": [],
+              "attester_slashings": [],
+              "attestations": [],
+              "deposits": [],
+              "voluntary_exits": [],
+              "sync_aggregate": {
+                "sync_committee_bits": "0x2a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869",
+                "sync_committee_signature": "0x9612a38c6153eac236a65dad00c711f74fc26ed501024d7886ab26c38401bf3237d1e69b5f797f6167906ab78cf9911416df6aff81176fd783db8dd3ea83f26cc7d4341615b7026b48bd91c3fa8d2e2ded136a0e1fa326ee9872baeda044f480"
+              }
+            }
+          }
+        }
+      },
+      "expected_signing_root": "0x3b3287e70bd20238863aeb48062380b7685fd0abfaf42babe5dbd139c78d2be1"
+    },
+    {
+      "name": "hoodi-attestation-before-fulu",
+      "network": "hoodi",
+      "request": {
+        "type": "ATTESTATION",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x60000910",
+            "current_version": "0x70000910",
+            "epoch": "50688"
+          },
+          "genesis_validators_root": "0x212f13fc4df078b6cb7db228f1c8307566dcecf900867401a92023d7ba99cb5f"
+        },
+        "attestation": {
+          "slot": "1622015",
+          "index": "0",
+          "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+          "source": {
+            "epoch": "50686",
+            "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+          },
+          "target": {
+            "epoch": "50687",
+            "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+          }
+        }
+      },
+      "expected_signing_root": "0x049f99c4ad4ae4f9dfd27b7e532e2a2a059d51a2aaa8d613d60f172ea298df93"
+    },
+    {
+      "name": "hoodi-attestation-at-fulu",
+      "network": "hoodi",
+      "request": {
+        "type": "ATTESTATION",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x60000910",
+            "current_version": "0x70000910",
+            "epoch": "50688"
+          },
+          "genesis_validators_root": "0x212f13fc4df078b6cb7db228f1c8307566dcecf900867401a92023d7ba99cb5f"
+        },
+        "attestation": {
+          "slot": "1622016",
+          "index": "0",
+          "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+          "source": {
+            "epoch": "50687",
+            "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+          },
+          "target": {
+            "epoch": "50688",
+            "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+          }
+        }
+      },
+      "expected_signing_root": "0xd44dad1683042929562c818c465c339c93d3a16ea866cfa9a0169e6cb6925e59"
+    },
+    {
+      "name": "hoodi-fulu-block-header",
+      "network": "hoodi",
+      "request": {
+        "type": "BLOCK_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x60000910",
+            "current_version": "0x70000910",
+            "epoch": "50688"
+          },
+          "genesis_validators_root": "0x212f13fc4df078b6cb7db228f1c8307566dcecf900867401a92023d7ba99cb5f"
+        },
+        "beacon_block": {
+          "version": "FULU",
+          "block_header": {
+            "slot": "1622023",
+            "proposer_index": "123456",
+            "parent_root": "0x0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c",
+            "state_root": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+            "body_root": "0x767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495"
+          }
+        }
+      },
+      "expected_signing_root": "0x1746defb138d7b9cc08baf553dc7ae544542b4cecb8fce760cdabeb815ec5cf2"
+    },
+    {
+      "name": "hoodi-voluntary-exit-capella-domain",
+      "network": "hoodi",
+      "request": {
+        "type": "VOLUNTARY_EXIT",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x60000910",
+            "current_version": "0x70000910",
+            "epoch": "50688"
+          },
+          "genesis_validators_root": "0x212f13fc4df078b6cb7db228f1c8307566dcecf900867401a92023d7ba99cb5f"
+        },
+        "voluntary_exit": {
+          "epoch": "50700",
+          "validator_index": "480123"
+        }
+      },
+      "expected_signing_root": "0xcd2a4c6a2d5252690768d1cf4026b0b93756320c93d086f062a5bdc5f2190a29"
+    },
+    {
+      "name": "hoodi-validator-registration",
+      "network": "hoodi",
+      "request": {
+        "type": "VALIDATOR_REGISTRATION",
+        "validator_registration": {
+          "fee_recipient": "0xb5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8",
+          "gas_limit": "60000000",
+          "timestamp": "1760000001",
+          "pubkey": "0x97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb"
+        }
+      },
+      "expected_signing_root": "0x339a74b788c94ffd19e9171e865837b4b5896a534e291910369f1d6c3be83efc"
+    },
+    {
+      "name": "hoodi-deposit",
+      "network": "hoodi",
+      "request": {
+        "type": "DEPOSIT",
+        "deposit": {
+          "pubkey": "0x97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb",
+          "withdrawal_credentials": "0x010000000000000000000000606162636465666768696a6b6c6d6e6f70717273",
+          "amount": "32000000000",
+          "genesis_fork_version": "0x10000910"
+        }
+      },
+      "expected_signing_root": "0x9565ca3583e84b8635c89be70699aa618cea6f0125e0fb442559cab796dec5d2"
+    },
+    {
+      "name": "gnosis-attestation-before-fulu",
+      "network": "gnosis",
+      "request": {
+        "type": "ATTESTATION",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "attestation": {
+          "slot": "27435007",
+          "index": "0",
+          "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+          "source": {
+            "epoch": "1714686",
+            "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+          },
+          "target": {
+            "epoch": "1714687",
+            "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+          }
+        }
+      },
+      "expected_signing_root": "0xd8aea51afe205928184b5725006fedddf2d097087ce6307dfff9635a6aa623f2"
+    },
+    {
+      "name": "gnosis-aggregation-slot-before-fulu",
+      "network": "gnosis",
+      "request": {
+        "type": "AGGREGATION_SLOT",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "aggregation_slot": {
+          "slot": "27435007"
+        }
+      },
+      "expected_signing_root": "0xdc9bb095f98c668db5421f664246bc5d4bf7f12ead960fb670dd6f4d51485ba5"
+    },
+    {
+      "name": "gnosis-randao-before-fulu",
+      "network": "gnosis",
+      "request": {
+        "type": "RANDAO_REVEAL",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "randao_reveal": {
+          "epoch": "1714687"
+        }
+      },
+      "expected_signing_root": "0xa2faa6e6134f8ccc7d370271550aaff9bfcb71ec88b88fee8dc3a98952691065"
+    },
+    {
+      "name": "gnosis-attestation-at-fulu",
+      "network": "gnosis",
+      "request": {
+        "type": "ATTESTATION",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "attestation": {
+          "slot": "27435008",
+          "index": "0",
+          "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+          "source": {
+            "epoch": "1714687",
+            "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+          },
+          "target": {
+            "epoch": "1714688",
+            "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+          }
+        }
+      },
+      "expected_signing_root": "0xc55dff21d0ff9c049ae8794ceded09bb51e8fa9aa21ba0e43c3b75c1fc6f6a5d"
+    },
+    {
+      "name": "gnosis-aggregation-slot-at-fulu",
+      "network": "gnosis",
+      "request": {
+        "type": "AGGREGATION_SLOT",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "aggregation_slot": {
+          "slot": "27435008"
+        }
+      },
+      "expected_signing_root": "0x07fde6a816a2814bacbf3ab648944a2e2bf37e4a97e61319e4df627de252d398"
+    },
+    {
+      "name": "gnosis-randao-at-fulu",
+      "network": "gnosis",
+      "request": {
+        "type": "RANDAO_REVEAL",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "randao_reveal": {
+          "epoch": "1714688"
+        }
+      },
+      "expected_signing_root": "0xd0f62141c23c2e63ddeea847d52f915fc9654c066d0a3fe2119810dc2f40dc05"
+    },
+    {
+      "name": "gnosis-fulu-block-header",
+      "network": "gnosis",
+      "request": {
+        "type": "BLOCK_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "beacon_block": {
+          "version": "FULU",
+          "block_header": {
+            "slot": "27435015",
+            "proposer_index": "123456",
+            "parent_root": "0x0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c",
+            "state_root": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+            "body_root": "0x767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495"
+          }
+        }
+      },
+      "expected_signing_root": "0xda1f7f75cba15cbfcbee3b89dfded9ec3f3b1284784558d38aeeb1d0db375dbb"
+    },
+    {
+      "name": "gnosis-voluntary-exit-capella-domain",
+      "network": "gnosis",
+      "request": {
+        "type": "VOLUNTARY_EXIT",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "voluntary_exit": {
+          "epoch": "1714700",
+          "validator_index": "480123"
+        }
+      },
+      "expected_signing_root": "0x4ea3b5193769cdf0f20ffba3272f6e48c6f592c253a18225a1033a667616938f"
+    },
+    {
+      "name": "gnosis-validator-registration",
+      "network": "gnosis",
+      "request": {
+        "type": "VALIDATOR_REGISTRATION",
+        "validator_registration": {
+          "fee_recipient": "0xb5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8",
+          "gas_limit": "60000000",
+          "timestamp": "1760000001",
+          "pubkey": "0x97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb"
+        }
+      },
+      "expected_signing_root": "0xab8079d76314b33d62945dc541e86178fff8de967f06d4655ef6a5d26367f703"
+    },
+    {
+      "name": "gnosis-deposit",
+      "network": "gnosis",
+      "request": {
+        "type": "DEPOSIT",
+        "deposit": {
+          "pubkey": "0x97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb",
+          "withdrawal_credentials": "0x010000000000000000000000606162636465666768696a6b6c6d6e6f70717273",
+          "amount": "32000000000",
+          "genesis_fork_version": "0x00000064"
+        }
+      },
+      "expected_signing_root": "0x2a9ff012dc5af5d40dbd0f595eabe1f0aeb2251cc09e254fa519dda3281d9c3e"
+    },
+    {
+      "name": "gnosis-sync-message-before-fulu",
+      "network": "gnosis",
+      "request": {
+        "type": "SYNC_COMMITTEE_MESSAGE",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "sync_committee_message": {
+          "slot": "27435007",
+          "beacon_block_root": "0x15161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f3031323334"
+        }
+      },
+      "expected_signing_root": "0x537db47125cc509f288bdfc1c5a9c28d47746940467e738a4c261172a102ac30"
+    },
+    {
+      "name": "gnosis-sync-message-at-fulu",
+      "network": "gnosis",
+      "request": {
+        "type": "SYNC_COMMITTEE_MESSAGE",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "sync_committee_message": {
+          "slot": "27435008",
+          "beacon_block_root": "0x15161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f3031323334"
+        }
+      },
+      "expected_signing_root": "0x0e48ad49292e6b2837efde411bd9ba2a6c5d67a6db352891a3bc7a5ac545b180"
+    },
+    {
+      "name": "gnosis-sync-selection-proof",
+      "network": "gnosis",
+      "request": {
+        "type": "SYNC_COMMITTEE_SELECTION_PROOF",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "sync_aggregator_selection_data": {
+          "slot": "27435018",
+          "subcommittee_index": "2"
+        }
+      },
+      "expected_signing_root": "0xac8f85e03c3329973cd15029264e7be943ff00b32b949a41c0e445efb63c0908"
+    },
+    {
+      "name": "gnosis-sync-contribution-and-proof",
+      "network": "gnosis",
+      "request": {
+        "type": "SYNC_COMMITTEE_CONTRIBUTION_AND_PROOF",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "contribution_and_proof": {
+          "aggregator_index": "769321",
+          "selection_proof": "0x95098efeaabd06b2814f10f8e00904798951476e5fb3e40723f503590fdcbc913592cf070a7b4146d9b7c4b337f94ef005784d3ceac97a976a8a75951c684dd0fc79960b95e72f3359f7f3bd7fc095cc32d868fd35eaf8555a139ade774eef00",
+          "contribution": {
+            "slot": "27435007",
+            "beacon_block_root": "0x434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162",
+            "subcommittee_index": "3",
+            "aggregation_bits": "0x808182838485868788898a8b8c8d8e8f",
+            "signature": "0x93df21d7d1320b60eeda8cf865c59a6d5e733a9cb1795d1d216908143f627d1e18345b482e66086da2424fd888673f6206d0cc099b4b9783286443795e84097b5748cce5886b62cc9875cb536424f4e4ea1f21bb54492af9b5f4eca11553b652"
+          }
+        }
+      },
+      "expected_signing_root": "0x2be06f6d82acdb2e90a05e7d8c5e59b83138aa76b111e6e31ece8ed14b74d862"
+    },
+    {
+      "name": "gnosis-deneb-aggregate-and-proof",
+      "network": "gnosis",
+      "request": {
+        "type": "AGGREGATE_AND_PROOF_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x04000064",
+            "current_version": "0x05000064",
+            "epoch": "1337856"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "aggregate_and_proof": {
+          "version": "DENEB",
+          "data": {
+            "aggregator_index": "98765",
+            "aggregate": {
+              "aggregation_bits": "0x017302",
+              "data": {
+                "slot": "21405695",
+                "index": "2",
+                "beacon_block_root": "0x1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+                "source": {
+                  "epoch": "1337854",
+                  "root": "0x5a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70717273747576777879"
+                },
+                "target": {
+                  "epoch": "1337855",
+                  "root": "0xa6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5"
+                }
+              },
+              "signature": "0x92cd3ecc7d2f9fe74963755a2404722b6d4d1465682d3dfd5618fb9c3da68979b50e4c0d2a4964f5b7dc8e768de91577168adec5b0a21e2d8563d876437e85aafa1279fae9d28fdce76eade8f0b41e08a05054257449fd7c0e7cf66ae9be47b6"
+            },
+            "selection_proof": "0xb42609673f05919b4a26ea5a97b8201415ff9df98e2aad10ca8649a226fe208e7db45dffcf5d8a94e4fdfceaf43b17d10a6c2d66fdd98812fd4aca583d3202ae1a09fe0f588a4c7bda83ff4ee03fe4835fdb3a6423188bab95b45c1729838069"
+          }
+        }
+      },
+      "expected_signing_root": "0x2aeb8ead5f36c267484654db055db8b96d3a7b9e09f02d170bde88fcc911c922"
+    },
+    {
+      "name": "gnosis-electra-aggregate-and-proof",
+      "network": "gnosis",
+      "request": {
+        "type": "AGGREGATE_AND_PROOF_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "aggregate_and_proof": {
+          "version": "ELECTRA",
+          "data": {
+            "aggregator_index": "98765",
+            "aggregate": {
+              "aggregation_bits": "0x017302",
+              "data": {
+                "slot": "27435007",
+                "index": "0",
+                "beacon_block_root": "0x1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+                "source": {
+                  "epoch": "1714686",
+                  "root": "0x5a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70717273747576777879"
+                },
+                "target": {
+                  "epoch": "1714687",
+                  "root": "0xa6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5"
+                }
+              },
+              "signature": "0x92cd3ecc7d2f9fe74963755a2404722b6d4d1465682d3dfd5618fb9c3da68979b50e4c0d2a4964f5b7dc8e768de91577168adec5b0a21e2d8563d876437e85aafa1279fae9d28fdce76eade8f0b41e08a05054257449fd7c0e7cf66ae9be47b6",
+              "committee_bits": "0x0100010000000000"
+            },
+            "selection_proof": "0xb42609673f05919b4a26ea5a97b8201415ff9df98e2aad10ca8649a226fe208e7db45dffcf5d8a94e4fdfceaf43b17d10a6c2d66fdd98812fd4aca583d3202ae1a09fe0f588a4c7bda83ff4ee03fe4835fdb3a6423188bab95b45c1729838069"
+          }
+        }
+      },
+      "expected_signing_root": "0x3e407c91d1d9cf26f89777cbdf976bcd1079217e708ee20f9c5dc5fccdd5e0d4"
+    },
+    {
+      "name": "gnosis-fulu-aggregate-and-proof",
+      "network": "gnosis",
+      "request": {
+        "type": "AGGREGATE_AND_PROOF_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x05000064",
+            "current_version": "0x06000064",
+            "epoch": "1714688"
+          },
+          "genesis_validators_root": "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47"
+        },
+        "aggregate_and_proof": {
+          "version": "FULU",
+          "data": {
+            "aggregator_index": "98765",
+            "aggregate": {
+              "aggregation_bits": "0x017302",
+              "data": {
+                "slot": "27435011",
+                "index": "0",
+                "beacon_block_root": "0x1112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30",
+                "source": {
+                  "epoch": "1714687",
+                  "root": "0x5a5b5c5d5e5f606162636465666768696a6b6c6d6e6f70717273747576777879"
+                },
+                "target": {
+                  "epoch": "1714688",
+                  "root": "0xa6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5"
+                }
+              },
+              "signature": "0x92cd3ecc7d2f9fe74963755a2404722b6d4d1465682d3dfd5618fb9c3da68979b50e4c0d2a4964f5b7dc8e768de91577168adec5b0a21e2d8563d876437e85aafa1279fae9d28fdce76eade8f0b41e08a05054257449fd7c0e7cf66ae9be47b6",
+              "committee_bits": "0x0100010000000000"
+            },
+            "selection_proof": "0xb42609673f05919b4a26ea5a97b8201415ff9df98e2aad10ca8649a226fe208e7db45dffcf5d8a94e4fdfceaf43b17d10a6c2d66fdd98812fd4aca583d3202ae1a09fe0f588a4c7bda83ff4ee03fe4835fdb3a6423188bab95b45c1729838069"
+          }
+        }
+      },
+      "expected_signing_root": "0xeb9ff29ef4d9eb2e9f88facab4bfd580e8caa870f06344464b667bb0093fbe5b"
+    },
+    {
+      "name": "chiado-attestation-before-fulu",
+      "network": "chiado",
+      "request": {
+        "type": "ATTESTATION",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x0500006f",
+            "current_version": "0x0600006f",
+            "epoch": "1353216"
+          },
+          "genesis_validators_root": "0x9d642dac73058fbf39c0ae41ab1e34e4d889043cb199851ded7095bc99eb4c1e"
+        },
+        "attestation": {
+          "slot": "21651455",
+          "index": "0",
+          "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+          "source": {
+            "epoch": "1353214",
+            "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+          },
+          "target": {
+            "epoch": "1353215",
+            "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+          }
+        }
+      },
+      "expected_signing_root": "0x5349b74c52c8b195c15643a0ba92c2d6f95502ba3995a616a665fcb7fd598f1c"
+    },
+    {
+      "name": "chiado-attestation-at-fulu",
+      "network": "chiado",
+      "request": {
+        "type": "ATTESTATION",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x0500006f",
+            "current_version": "0x0600006f",
+            "epoch": "1353216"
+          },
+          "genesis_validators_root": "0x9d642dac73058fbf39c0ae41ab1e34e4d889043cb199851ded7095bc99eb4c1e"
+        },
+        "attestation": {
+          "slot": "21651456",
+          "index": "0",
+          "beacon_block_root": "0x0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+          "source": {
+            "epoch": "1353215",
+            "root": "0x4a4b4c4d4e4f505152535455565758595a5b5c5d5e5f60616263646566676869"
+          },
+          "target": {
+            "epoch": "1353216",
+            "root": "0x969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5"
+          }
+        }
+      },
+      "expected_signing_root": "0x4e27a6573811700e7b54adf6b8bf2cba371cb536c8c730e1fa4d5b7aec150ff5"
+    },
+    {
+      "name": "chiado-fulu-block-header",
+      "network": "chiado",
+      "request": {
+        "type": "BLOCK_V2",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x0500006f",
+            "current_version": "0x0600006f",
+            "epoch": "1353216"
+          },
+          "genesis_validators_root": "0x9d642dac73058fbf39c0ae41ab1e34e4d889043cb199851ded7095bc99eb4c1e"
+        },
+        "beacon_block": {
+          "version": "FULU",
+          "block_header": {
+            "slot": "21651463",
+            "proposer_index": "123456",
+            "parent_root": "0x0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c",
+            "state_root": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+            "body_root": "0x767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495"
+          }
+        }
+      },
+      "expected_signing_root": "0x5c72307c3b471e7b051f9e408a7062db6890abcf0b87b5c9f6ba771d4f76fc45"
+    },
+    {
+      "name": "chiado-voluntary-exit-capella-domain",
+      "network": "chiado",
+      "request": {
+        "type": "VOLUNTARY_EXIT",
+        "fork_info": {
+          "fork": {
+            "previous_version": "0x0500006f",
+            "current_version": "0x0600006f",
+            "epoch": "1353216"
+          },
+          "genesis_validators_root": "0x9d642dac73058fbf39c0ae41ab1e34e4d889043cb199851ded7095bc99eb4c1e"
+        },
+        "voluntary_exit": {
+          "epoch": "1353228",
+          "validator_index": "480123"
+        }
+      },
+      "expected_signing_root": "0xf0dcfcf247a531ce5f83daef00896af2024893154e749f27af8d9b937eb0d227"
+    },
+    {
+      "name": "chiado-validator-registration",
+      "network": "chiado",
+      "request": {
+        "type": "VALIDATOR_REGISTRATION",
+        "validator_registration": {
+          "fee_recipient": "0xb5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8",
+          "gas_limit": "60000000",
+          "timestamp": "1760000001",
+          "pubkey": "0x97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb"
+        }
+      },
+      "expected_signing_root": "0x9a33725ae5a2dda794f061bc7f0cf92d64c98b3d4437a7349f1b8bc40497c068"
+    },
+    {
+      "name": "chiado-deposit",
+      "network": "chiado",
+      "request": {
+        "type": "DEPOSIT",
+        "deposit": {
+          "pubkey": "0x97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb",
+          "withdrawal_credentials": "0x010000000000000000000000606162636465666768696a6b6c6d6e6f70717273",
+          "amount": "32000000000",
+          "genesis_fork_version": "0x0000006f"
+        }
+      },
+      "expected_signing_root": "0xb7d650c7daf174cf359e69158ed5520529cda990fd65355f8312dd5d1de78f5c"
+    }
+  ]
+}

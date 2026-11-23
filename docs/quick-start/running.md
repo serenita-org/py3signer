@@ -10,10 +10,10 @@
 
 ## Basic Usage
 
-Start py3signer with default settings:
+Start py3signer on Hoodi with the default server settings:
 
 ```bash
-uv run python -m py3signer
+uv run python -m py3signer --network hoodi
 ```
 
 This starts the server on `127.0.0.1:8080` with the metrics endpoint on `127.0.0.1:8081`.
@@ -24,13 +24,13 @@ This starts the server on `127.0.0.1:8080` with the metrics endpoint on `127.0.0
 
 ```bash
 # Bind to all interfaces (use with caution)
-uv run python -m py3signer --host 0.0.0.0
+uv run python -m py3signer --network hoodi --host 0.0.0.0
 
 # Use a custom port
-uv run python -m py3signer --port 9000
+uv run python -m py3signer --network hoodi --port 9000
 
 # Custom host and port
-uv run python -m py3signer --host 0.0.0.0 --port 9000
+uv run python -m py3signer --network hoodi --host 0.0.0.0 --port 9000
 ```
 
 !!! warning "Network Exposure"
@@ -41,10 +41,10 @@ uv run python -m py3signer --host 0.0.0.0 --port 9000
 
 ```bash
 # Debug logging
-uv run python -m py3signer --log-level DEBUG
+uv run python -m py3signer --network hoodi --log-level DEBUG
 
 # Quiet mode (errors only)
-uv run python -m py3signer --log-level ERROR
+uv run python -m py3signer --network hoodi --log-level ERROR
 ```
 
 Available levels: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
@@ -53,10 +53,10 @@ Available levels: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
 
 ```bash
 # Custom metrics port
-uv run python -m py3signer --metrics-port 9090
+uv run python -m py3signer --network hoodi --metrics-port 9090
 
 # Bind metrics to specific interface
-uv run python -m py3signer --metrics-host 0.0.0.0 --metrics-port 9090
+uv run python -m py3signer --network hoodi --metrics-host 0.0.0.0 --metrics-port 9090
 ```
 
 ## Loading Keystores
@@ -67,7 +67,7 @@ The recommended approach for persistent keystores:
 
 ```bash
 # Load keystores from a directory at startup
-uv run python -m py3signer --data-dir ./my-keystores
+uv run python -m py3signer --network hoodi --data-dir ./my-keystores
 ```
 
 Directory structure:
@@ -89,7 +89,7 @@ Keystore files (`.json`) and their corresponding password files (`.txt`) must sh
 For keystores that should **not** be copied to the managed storage:
 
 ```bash
-uv run python -m py3signer \
+uv run python -m py3signer --network hoodi \
   --keystores-path ./external-keys \
   --keystores-passwords-path ./external-passwords
 ```
@@ -99,7 +99,7 @@ These keystores are loaded into memory but **never written to disk** in decrypte
 ### Combined Example
 
 ```bash
-uv run python -m py3signer \
+uv run python -m py3signer --network hoodi \
   --data-dir ./persistent-keystores \
   --keystores-path ./external-keys \
   --keystores-passwords-path ./external-passwords \
@@ -114,13 +114,13 @@ py3signer uses multiple worker processes for handling concurrent requests:
 
 ```bash
 # Use 8 worker processes (default is CPU count)
-uv run python -m py3signer --workers 8
+uv run python -m py3signer --network hoodi --workers 8
 ```
 
 Or via environment variable:
 
 ```bash
-PY3SIGNER_WORKERS=8 uv run python -m py3signer
+PY3SIGNER_WORKERS=8 uv run python -m py3signer --network hoodi
 ```
 
 ## Health Check
@@ -176,7 +176,7 @@ Send `SIGINT` (Ctrl+C) for graceful shutdown:
 
 ```bash
 # Running in foreground
-uv run python -m py3signer
+uv run python -m py3signer --network hoodi
 ^C  # Press Ctrl+C to stop
 ```
 
@@ -184,7 +184,7 @@ uv run python -m py3signer
 
 ```bash
 # Start in background
-uv run python -m py3signer --data-dir ./keystores > py3signer.log 2>&1 &
+uv run python -m py3signer --network hoodi --data-dir ./keystores > py3signer.log 2>&1 &
 echo $! > py3signer.pid
 
 # Stop
@@ -206,7 +206,7 @@ Type=simple
 User=py3signer
 Group=py3signer
 WorkingDirectory=/opt/py3signer
-ExecStart=/opt/py3signer/.venv/bin/python -m py3signer --data-dir /var/lib/py3signer
+ExecStart=/opt/py3signer/.venv/bin/python -m py3signer --network hoodi --data-dir /var/lib/py3signer
 Restart=on-failure
 RestartSec=5
 
@@ -257,7 +257,7 @@ ERROR - Failed to add keystore ... to storage
 lsof -i :8080
 
 # Use a different port
-uv run python -m py3signer --port 8082
+uv run python -m py3signer --network hoodi --port 8082
 ```
 
 ### Keystore Loading Failures
@@ -265,7 +265,7 @@ uv run python -m py3signer --port 8082
 Enable debug logging to see detailed error messages:
 
 ```bash
-uv run python -m py3signer --data-dir ./keystores --log-level DEBUG
+uv run python -m py3signer --network hoodi --data-dir ./keystores --log-level DEBUG
 ```
 
 Common issues:

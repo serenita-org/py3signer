@@ -7,6 +7,22 @@ from pathlib import Path
 import msgspec
 
 
+class NetworkConfig(msgspec.Struct, frozen=True):
+    """Consensus settings defined by a supported network."""
+
+    preset: str
+    genesis_fork_version: str
+    capella_fork_version: str
+
+
+_NETWORKS = {
+    "mainnet": NetworkConfig("mainnet", "0x00000000", "0x03000000"),
+    "hoodi": NetworkConfig("mainnet", "0x10000910", "0x40000910"),
+    "gnosis": NetworkConfig("gnosis", "0x00000064", "0x03000064"),
+    "chiado": NetworkConfig("gnosis", "0x0000006f", "0x0300006f"),
+}
+
+
 class Config(msgspec.Struct, frozen=True):
     """Application configuration using msgspec Struct."""
 
@@ -30,6 +46,9 @@ class Config(msgspec.Struct, frozen=True):
 
     # Worker settings
     workers: int = multiprocessing.cpu_count()
+
+    # Consensus signing settings
+    network: str = "mainnet"
 
     def __post_init__(self) -> None:
         """Validate configuration after initialization."""
@@ -93,6 +112,14 @@ class Config(msgspec.Struct, frozen=True):
         # Validate workers
         if self.workers < 1:
             raise ValueError(f"workers must be at least 1, got {self.workers}")
+
+        if self.network not in _NETWORKS:
+            raise ValueError(f"network must be one of {', '.join(_NETWORKS)}")
+
+    @property
+    def network_config(self) -> NetworkConfig:
+        """Return the consensus settings for the selected network."""
+        return _NETWORKS[self.network]
 
     @property
     def normalized_log_level(self) -> str:
@@ -161,6 +188,13 @@ def get_config() -> Config:
         default=multiprocessing.cpu_count(),
         help=f"Number of worker processes (default: {multiprocessing.cpu_count()})",
     )
+    parser.add_argument(
+        "--network",
+        choices=tuple(_NETWORKS),
+        required=True,
+        default=argparse.SUPPRESS,
+        help="Consensus network to sign for",
+    )
 
     args = parser.parse_args()
 
@@ -175,6 +209,7 @@ def get_config() -> Config:
         "keystores_path": args.keystores_path,
         "keystores_passwords_path": args.keystores_passwords_path,
         "workers": args.workers,
+        "network": args.network,
     }
 
     # Create config from dict using msgspec convert

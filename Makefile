@@ -20,12 +20,12 @@ build:
 dev: sync
 	uv run maturin develop
 
-# Run with uv
+# Run with uv (make run NETWORK=hoodi)
 run:
-	uv run python -m py3signer
+	uv run python -m py3signer --network "$(NETWORK)"
 
 run-debug:
-	uv run python -m py3signer --log-level DEBUG
+	uv run python -m py3signer --network "$(NETWORK)" --log-level DEBUG
 
 # Testing
 test: test-rust test-python
@@ -54,7 +54,7 @@ docker-build:
 	docker build -t py3signer:latest .
 
 docker-run:
-	docker run -p 8080:8080 py3signer:latest
+	docker run -p 8080:8080 py3signer:latest --network "$(NETWORK)"
 
 # Cleanup
 clean:

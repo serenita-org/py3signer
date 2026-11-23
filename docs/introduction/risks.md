@@ -69,7 +69,7 @@ By default, py3signer binds to `127.0.0.1` (localhost). If you change this to `0
 
 ```bash
 # ⚠️ Dangerous – exposes signer to network
-uv run python -m py3signer --host 0.0.0.0
+uv run python -m py3signer --network hoodi --host 0.0.0.0
 ```
 
 Anyone with network access can request signatures if there's no additional firewall protection.

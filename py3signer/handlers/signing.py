@@ -10,11 +10,10 @@ from litestar import Controller, Request, Response, get, post
 from litestar.exceptions import HTTPException, NotFoundException, ValidationException
 from litestar.status_codes import HTTP_200_OK, HTTP_500_INTERNAL_SERVER_ERROR
 
+from py3signer.config import Config  # noqa: TC001
 from py3signer.signer import Signer, SignerError
-from py3signer.signing_types import (
-    sign_request_decoder,
-    validate_signing_root,
-)
+from py3signer.signing_roots import compute_signing_root
+from py3signer.signing_types import sign_request_decoder
 from py3signer.storage import KeyStorage  # noqa: TC001
 
 from .base import SignResponse, clean_pubkey_hex
@@ -39,6 +38,7 @@ class SigningController(Controller):  # type: ignore[misc]
         request: Request,
         identifier: str,
         signer: Signer,
+        config: Config,
     ) -> Response | SignResponse:
         """POST /api/v1/eth2/sign/:identifier - Sign data."""
         pubkey_hex = clean_pubkey_hex(identifier)
@@ -53,17 +53,12 @@ class SigningController(Controller):  # type: ignore[misc]
         except msgspec.DecodeError as e:
             raise ValidationException(detail=f"JSON decode error: {e}") from e
 
-        # Validate signing root
         try:
-            message = validate_signing_root(sign_request.signing_root)
-        except ValueError as e:
-            raise ValidationException(detail=str(e)) from e
-
-        if message is None:
-            raise ValidationException(
-                detail="signing_root is required - SSZ signing root computation from request data "
-                "is not yet implemented. Please provide signing_root in the request.",
+            message = await asyncio.to_thread(
+                compute_signing_root, sign_request, config
             )
+        except (ValueError, msgspec.ValidationError) as e:
+            raise ValidationException(detail=str(e)) from e
 
         # Perform signing
         try:

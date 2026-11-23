@@ -240,8 +240,7 @@ Sign data with the specified validator key.
   },
   "aggregation_slot": {
     "slot": "100"
-  },
-  "signing_root": "0x1234567890abcdef..."
+  }
 }
 ```
 
@@ -252,12 +251,13 @@ py3signer supports the following signing domains:
 | Type | Description |
 |------|-------------|
 | `AGGREGATION_SLOT` | Aggregation slot selection |
-| `AGGREGATE_AND_PROOF` | Aggregate attestation and proof |
+| `AGGREGATE_AND_PROOF` | Unversioned aggregate attestation and proof through Fulu |
+| `AGGREGATE_AND_PROOF_V2` | Versioned aggregate attestation and proof |
 | `ATTESTATION` | Attestation signing |
-| `BLOCK` | Beacon block signing |
-| `BLOCK_V2` | Beacon block signing (Deneb+) |
+| `BLOCK` | Phase0 beacon block signing |
+| `BLOCK_V2` | Versioned beacon block or block header signing |
 | `DEPOSIT` | Deposit data signing |
-| `RANDAO` | RANDAO reveal |
+| `RANDAO_REVEAL` | RANDAO reveal |
 | `SYNC_COMMITTEE_MESSAGE` | Sync committee message |
 | `SYNC_COMMITTEE_SELECTION_PROOF` | Sync committee selection proof |
 | `SYNC_COMMITTEE_CONTRIBUTION_AND_PROOF` | Sync committee contribution |
@@ -269,12 +269,19 @@ py3signer supports the following signing domains:
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `type` | string | Yes | Signing domain type |
-| `signing_root` | string | Yes | SSZ signing root (32 bytes, hex) |
-| `fork_info` | object | Yes | Fork information for domain calculation |
+| `signingRoot` or `signing_root` | string | No | Expected SSZ signing root (32 bytes, hex) |
+| `fork_info` | object | Except for deposits and registrations | Fork information for domain calculation |
 
-!!! important "Signing Root Required"
+py3signer derives the signing root from the request payload and its signing domain.
+If a request includes a root, it must match the computed root. See
+[`--network`](configuration.md#network) for the network settings. In a
+`DEPOSIT` request, `deposit.genesis_fork_version` defaults to the selected
+network's genesis fork version.
 
-    py3signer **requires** the `signing_root` field. SSZ signing root computation from request data is not yet implemented.
+For `BLOCK_V2`, send `block` for Phase0 and Altair. Bellatrix through
+Gloas support `block_header`. Electra, Fulu, and Gloas also support full
+blocks. Use `AGGREGATE_AND_PROOF_V2` with an explicit fork for Gloas
+aggregates. `BLOB_SIDECAR` requests return HTTP 400.
 
 **Response (JSON):**
 
@@ -295,7 +302,7 @@ If the request includes `Accept: text/plain` header:
 **Status Codes:**
 
 - `200 OK` – Successfully signed data
-- `400 Bad Request` – Invalid request format or missing signing root
+- `400 Bad Request` – Invalid payload, unsupported signing request, or mismatched signing root
 - `404 Not Found` – Public key not found
 - `500 Internal Server Error` – Signing failure
 
@@ -370,9 +377,16 @@ curl -X POST http://localhost:8080/eth/v1/keystores \
 curl -X POST http://localhost:8080/api/v1/eth2/sign/0xa1d1... \
   -H "Content-Type: application/json" \
   -d '{
-    "type": "RANDAO",
-    "signing_root": "0x...",
-    "fork_info": {...}
+    "type": "RANDAO_REVEAL",
+    "fork_info": {
+      "fork": {
+        "previous_version": "0x00000000",
+        "current_version": "0x00000000",
+        "epoch": "0"
+      },
+      "genesis_validators_root": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "randao_reveal": {"epoch": "3"}
   }'
 ```
 
@@ -388,9 +402,16 @@ async with httpx.AsyncClient() as client:
 
     # Sign data
     sign_request = {
-        "type": "RANDAO",
-        "signing_root": "0x...",
-        "fork_info": {...}
+        "type": "RANDAO_REVEAL",
+        "fork_info": {
+            "fork": {
+                "previous_version": "0x00000000",
+                "current_version": "0x00000000",
+                "epoch": "0",
+            },
+            "genesis_validators_root": "0x" + "00" * 32,
+        },
+        "randao_reveal": {"epoch": "3"},
     }
     response = await client.post(
         f"http://localhost:8080/api/v1/eth2/sign/{pubkey}",

@@ -29,6 +29,7 @@ from litestar.datastructures import State  # noqa: TC002
 from litestar.di import Provide
 
 from .bulk_loader import load_external_keystores
+from .config import Config  # noqa: TC001
 from .handlers import get_routers
 from .signer import Signer
 from .storage import KeyStorage
@@ -36,8 +37,6 @@ from .storage import KeyStorage
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
     from pathlib import Path
-
-    from .config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +61,12 @@ def provide_signer(state: State) -> Signer:
     via dependency injection instead of accessing request.app.state directly.
     """
     result: Signer = state["signer"]
+    return result
+
+
+def provide_config(state: State) -> Config:
+    """Provide the server configuration to signing handlers."""
+    result: Config = state["config"]
     return result
 
 
@@ -187,11 +192,13 @@ def create_app(
             {
                 "storage": storage,
                 "signer": signer,
+                "config": config,
             },
         ),
         dependencies={
             "storage": Provide(provide_storage, sync_to_thread=False),
             "signer": Provide(provide_signer, sync_to_thread=False),
+            "config": Provide(provide_config, sync_to_thread=False),
         },
     )
 
