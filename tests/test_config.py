@@ -38,6 +38,65 @@ def test_network_selection_reaches_worker(
     assert config.network_config.capella_fork_version == capella_version
 
 
+def test_custom_network_selection_reaches_worker(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    config_path = tmp_path / "config.yaml"
+    config_path.write_text(
+        "# Devnet settings\n"
+        "PRESET_BASE: 'minimal' # Use eight slots per epoch\n"
+        'GENESIS_FORK_VERSION: "0x10000001"\n'
+        "CAPELLA_FORK_VERSION: 0x40000001\n"
+        "CONFIG_NAME: devnet\n"
+        "OTHER_SETTINGS:\n"
+        "  PRESET_BASE: mainnet\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "py3signer",
+            "--network",
+            "custom",
+            "--network-custom-config-path",
+            str(config_path),
+        ],
+    )
+    monkeypatch.setenv("PY3SIGNER_CONFIG", "")
+
+    store_config_in_env(get_config())
+    config_path.unlink()
+    config = load_config_from_env()
+
+    assert config is not None
+    assert config.network == "custom"
+    assert config.network_config.preset == "minimal"
+    assert config.network_config.genesis_fork_version == "0x10000001"
+    assert config.network_config.capella_fork_version == "0x40000001"
+
+
+@pytest.mark.parametrize(
+    ("network_args", "message"),
+    [
+        (["custom"], "--network-custom-config-path is required"),
+        (
+            ["hoodi", "--network-custom-config-path", "config.yaml"],
+            "requires --network custom",
+        ),
+    ],
+)
+def test_custom_network_path_requires_custom_network(
+    monkeypatch: pytest.MonkeyPatch,
+    network_args: list[str],
+    message: str,
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["py3signer", "--network", *network_args])
+    with pytest.raises(ValueError, match=message):
+        get_config()
+
+
 @pytest.mark.parametrize("arguments", [[], ["--network", "minimal"]])
 def test_cli_requires_supported_network(
     monkeypatch: pytest.MonkeyPatch,

@@ -1,6 +1,6 @@
 # Configuration
 
-py3signer is configured via command-line arguments. There is no configuration file.
+py3signer is configured via command-line arguments.
 
 !!! danger "Experimental Software"
 
@@ -11,11 +11,22 @@ py3signer is configured via command-line arguments. There is no configuration fi
 ### `--network`
 
 Required. Select the network to sign for. Supported values are `mainnet`,
-`hoodi`, `gnosis`, and `chiado`.
+`hoodi`, `gnosis`, `chiado`, and `custom`.
 
 Validator registrations and deposits without an explicit genesis fork version
 use the network's genesis fork version. Voluntary exits use the network's
 Capella fork version under EIP-7044.
+
+### `--network-custom-config-path`
+
+Required with `--network custom`. Pass the devnet's consensus config YAML file.
+The top-level `PRESET_BASE` selects `mainnet`, `gnosis`, or `minimal`.
+`GENESIS_FORK_VERSION` and `CAPELLA_FORK_VERSION` supply the devnet's four-byte
+fork versions as hex values with a `0x` prefix.
+
+```bash
+uv run python -m py3signer --network custom --network-custom-config-path ./config.yaml
+```
 
 ### `--host`
 

@@ -2,9 +2,11 @@
 
 import argparse
 import multiprocessing
+import re
 from pathlib import Path
 
 import msgspec
+from ssz_z import PRESETS
 
 
 class NetworkConfig(msgspec.Struct, frozen=True):
@@ -14,6 +16,18 @@ class NetworkConfig(msgspec.Struct, frozen=True):
     genesis_fork_version: str
     capella_fork_version: str
 
+    def __post_init__(self) -> None:
+        if self.preset not in PRESETS:
+            raise ValueError(
+                f"PRESET_BASE must be one of {', '.join(PRESETS)}, got {self.preset!r}",
+            )
+        for key, version in (
+            ("GENESIS_FORK_VERSION", self.genesis_fork_version),
+            ("CAPELLA_FORK_VERSION", self.capella_fork_version),
+        ):
+            if not re.fullmatch(r"0x[0-9a-fA-F]{8}", version):
+                raise ValueError(f"{key} must be a 4-byte hex value, got {version!r}")
+
 
 _NETWORKS = {
     "mainnet": NetworkConfig("mainnet", "0x00000000", "0x03000000"),
@@ -21,6 +35,44 @@ _NETWORKS = {
     "gnosis": NetworkConfig("gnosis", "0x00000064", "0x03000064"),
     "chiado": NetworkConfig("gnosis", "0x0000006f", "0x0300006f"),
 }
+_NETWORK_CHOICES = (*_NETWORKS, "custom")
+
+
+def _load_custom_network_config(path: Path) -> NetworkConfig:
+    """Read the signing settings from a flat consensus config YAML file."""
+    try:
+        contents = path.read_text(encoding="utf-8-sig")
+    except (OSError, UnicodeError) as e:
+        raise ValueError(f"Cannot read custom network config {path}: {e}") from e
+
+    required_keys = {"PRESET_BASE", "GENESIS_FORK_VERSION", "CAPELLA_FORK_VERSION"}
+    values: dict[str, str] = {}
+    for line in contents.splitlines():
+        key, separator, raw_value = line.partition(":")
+        key = key.rstrip()
+        if not separator or key not in required_keys:
+            continue
+        if key in values:
+            raise ValueError(f"Duplicate {key} in custom network config {path}")
+
+        value = re.split(r"(?:^|\s)#", raw_value, maxsplit=1)[0].strip()
+        if len(value) >= 2 and value[0] in ("'", '"') and value[-1] == value[0]:
+            value = value[1:-1]
+        values[key] = value
+
+    missing_keys = required_keys - values.keys()
+    if missing_keys:
+        raise ValueError(
+            f"Missing {', '.join(sorted(missing_keys))} in custom network config {path}",
+        )
+    try:
+        return NetworkConfig(
+            preset=values["PRESET_BASE"],
+            genesis_fork_version=values["GENESIS_FORK_VERSION"],
+            capella_fork_version=values["CAPELLA_FORK_VERSION"],
+        )
+    except ValueError as e:
+        raise ValueError(f"Invalid custom network config {path}: {e}") from e
 
 
 class Config(msgspec.Struct, frozen=True):
@@ -49,6 +101,7 @@ class Config(msgspec.Struct, frozen=True):
 
     # Consensus signing settings
     network: str = "mainnet"
+    custom_network_config: NetworkConfig | None = None
 
     def __post_init__(self) -> None:
         """Validate configuration after initialization."""
@@ -113,12 +166,18 @@ class Config(msgspec.Struct, frozen=True):
         if self.workers < 1:
             raise ValueError(f"workers must be at least 1, got {self.workers}")
 
-        if self.network not in _NETWORKS:
-            raise ValueError(f"network must be one of {', '.join(_NETWORKS)}")
+        if self.network not in _NETWORK_CHOICES:
+            raise ValueError(f"network must be one of {', '.join(_NETWORK_CHOICES)}")
+        if self.network == "custom" and self.custom_network_config is None:
+            raise ValueError("custom network settings are required for network custom")
+        if self.network != "custom" and self.custom_network_config is not None:
+            raise ValueError("custom network settings require network custom")
 
     @property
     def network_config(self) -> NetworkConfig:
         """Return the consensus settings for the selected network."""
+        if self.custom_network_config is not None:
+            return self.custom_network_config
         return _NETWORKS[self.network]
 
     @property
@@ -190,13 +249,28 @@ def get_config() -> Config:
     )
     parser.add_argument(
         "--network",
-        choices=tuple(_NETWORKS),
+        choices=_NETWORK_CHOICES,
         required=True,
         default=argparse.SUPPRESS,
         help="Consensus network to sign for",
     )
+    parser.add_argument(
+        "--network-custom-config-path",
+        type=Path,
+        help="Path to the consensus config YAML file required for --network custom",
+    )
 
     args = parser.parse_args()
+    custom_config_path = args.network_custom_config_path
+    custom_network_config = None
+    if args.network == "custom":
+        if custom_config_path is None:
+            raise ValueError(
+                "--network-custom-config-path is required for --network custom",
+            )
+        custom_network_config = _load_custom_network_config(custom_config_path)
+    elif custom_config_path is not None:
+        raise ValueError("--network-custom-config-path requires --network custom")
 
     # Build config dict from CLI arguments
     config_dict: dict[str, object] = {
@@ -210,6 +284,7 @@ def get_config() -> Config:
         "keystores_passwords_path": args.keystores_passwords_path,
         "workers": args.workers,
         "network": args.network,
+        "custom_network_config": custom_network_config,
     }
 
     # Create config from dict using msgspec convert

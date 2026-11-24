@@ -77,7 +77,8 @@ usage: py3signer [-h] [--host HOST] [-p PORT] [--log-level {DEBUG,INFO,WARNING,E
                  [--metrics-port METRICS_PORT] [--metrics-host METRICS_HOST]
                  [--data-dir DATA_DIR] [--keystores-path KEYSTORES_PATH]
                  [--keystores-passwords-path KEYSTORES_PASSWORDS_PATH] [-w WORKERS]
-                 --network {mainnet,hoodi,gnosis,chiado}
+                 --network {mainnet,hoodi,gnosis,chiado,custom}
+                 [--network-custom-config-path NETWORK_CUSTOM_CONFIG_PATH]
 
 py3signer - A Remote BLS Signer for Ethereum
 

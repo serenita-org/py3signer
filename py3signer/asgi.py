@@ -68,6 +68,7 @@ def store_config_in_env(config: Config) -> None:
         ),
         "workers": config.workers,
         "network": config.network,
+        "custom_network_config": msgspec.to_builtins(config.custom_network_config),
     }
     os.environ["PY3SIGNER_CONFIG"] = json.dumps(config_dict)
 

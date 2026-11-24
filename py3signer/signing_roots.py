@@ -46,7 +46,7 @@ if TYPE_CHECKING:
     from .signing_types import SignRequest
 
 _LEGACY_FORKS = ("phase0", "altair", "bellatrix", "capella", "deneb")
-_SLOTS_PER_EPOCH = {"mainnet": 32, "gnosis": 16}
+_SLOTS_PER_EPOCH = {"mainnet": 32, "gnosis": 16, "minimal": 8}
 
 
 def _fork_name(value: object) -> str:
