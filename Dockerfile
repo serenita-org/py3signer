@@ -38,6 +38,9 @@ RUN --mount=from=uv-image,source=/uv,target=/bin/uv \
     --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --compile-bytecode
 
+# Strip native debug data before copying the virtual environment into the runtime image.
+RUN find /py3signer/.venv -type f -name '*.so' -exec strip --strip-debug '{}' +
+
 # Runtime stage
 FROM docker.io/library/python:${PYTHON_IMAGE_TAG}
 
